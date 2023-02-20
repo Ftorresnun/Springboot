@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="ISO-8859-1">
+        <title>wordle</title>
+    </head>
+    <body>
+        <h1>wordle</h1>
+        <form action="play" method="post" modelAttribute="info">
+            <span>palabra</span>
+            <input path="wordToPlay" type="text" name="wordToPlay" placeholder="palabra">
+            <input type="submit" value="Add"/>
+            <p text="${info.wordToPlay}"></p> 
+        </form>
+    </body>
+</html>
