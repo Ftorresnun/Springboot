@@ -54,28 +54,30 @@ public class WordleController {
         char[] jugada = info.getWordToPlay().toCharArray();
 
         if(game.getNumAnswer().length() != info.getWordToPlay().length()) {
-            info.setMessage("error tamaño jugada");
-        }
-        if(game.getNumAnswer().equals(info.getWordToPlay())){
-            for(int i = 0; i < jugada.length; i++) {
-                char c = jugada[i];
-                if(respuesta[i] == c) {
-                    info.getAnswer().add("verde");
-                }
-                else if(game.getNumAnswer().contains(Character.toString(c))){
-                    info.getAnswer().add("amarillo");
-                }
-                else{
-                    info.getAnswer().add("rojo");
-                }
-            }
+            info.setErrorMessage("error tamaño jugada");
         }
         else{
-            pageToReturn = "fin";
-            info.setWordToPlay(" ");
+            if(game.getNumAnswer().equals(info.getWordToPlay())){
+                for(int i = 0; i < jugada.length; i++) {
+                    char c = jugada[i];
+                    if(respuesta[i] == c) {
+                        info.getAnswer().add("verde");
+                    }
+                    else if(game.getNumAnswer().contains(Character.toString(c))){
+                        info.getAnswer().add("amarillo");
+                    }
+                    else{
+                        info.getAnswer().add("rojo");
+                    }
+                }
+            }
+            else{
+                pageToReturn = "wordle";
+                info.setWordToPlay(wordsPlayed.get(wordsPlayed.size()-1));
+            }
+            info.setMessage("le quedan "+ (game.getNumTries() - wordsPlayed.size()) + " intentos");
         }
-
-        info.setMessage("ke quedan "+ (game.getNumTries() - wordsPlayed.size()) + " intentos");
+        
         modelAndView.setViewName(pageToReturn);
         modelAndView.addObject("info", info);
         return modelAndView;

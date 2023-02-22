@@ -16,7 +16,15 @@ public class Info {
     private String wordToPlay;
     int numJugada = 0;
     List<String> answer = new ArrayList<>();
-    
+    String errorMessage;
+
+    public String getErrorMessage() {
+        return this.errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
     
     public int getNumJugada() {
         return this.numJugada;
