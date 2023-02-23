@@ -8,13 +8,21 @@
         <h1>wordle</h1>
         <form action="play" method="post" modelAttribute="info">
             <span>palabra</span>
-            <input path="wordToPlay" type="text" name="wordToPlay" placeholder="palabra">
+            <input path="wordToPlay" type="text" name="wordToPlay" placeholder="palabra" th:maxlength="${game.getNumAnswer.length}">
             <input type="submit" value="Add"/>
         </form>
         <!-- show the word in screen-->
         <div th:if="${info.wordToPlay != null}">
             <span>Palabra jugada: </span>
-            <span th:text="${info.wordToPlay}"></span>
+            <table>
+                <tr>
+                    <th:block th:each="i : ${#numbers.sequence(0, palabraJugada.length-1, +1)}">
+                        <td>
+                            <div th:style="'background-color:' + ${info.answer[i]}" th:text="${palabraJugada[i]}"></div>
+                        </td>
+                    </th:block>
+                </tr>
+            </table>
         <div th:if="${info.wordToPlay != null}">
             <span>tamaño correcto: </span>
             <span th:text="${info.errorMessage}"></span>

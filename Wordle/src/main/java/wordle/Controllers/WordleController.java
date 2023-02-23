@@ -35,6 +35,7 @@ public class WordleController {
         }
         ModelAndView modelAndView = new ModelAndView("fin");
         modelAndView.addObject("info", info);
+        modelAndView.addObject("game", game);
         return modelAndView;
     }
 
@@ -42,6 +43,7 @@ public class WordleController {
     public ModelAndView goToIndexPage() {
         ModelAndView modelAndView = new ModelAndView("wordle");
         modelAndView.addObject("info", info);
+        modelAndView.addObject("game", game);
         return modelAndView;
     }
     
@@ -51,34 +53,35 @@ public class WordleController {
         wordsPlayed.add(info.getWordToPlay());
         char[] respuesta = game.getNumAnswer().toCharArray();
         char[] jugada = info.getWordToPlay().toCharArray();
-
         if(game.getNumAnswer().length() != info.getWordToPlay().length()) {
             info.setErrorMessage("error tamaño jugada");
         }
         else{
-            if(game.getNumAnswer().equals(info.getWordToPlay())){
+            if(!game.getNumAnswer().equals(info.getWordToPlay())){
                 for(int i = 0; i < jugada.length; i++) {
                     char c = jugada[i];
                     if(respuesta[i] == c) {
-                        info.getAnswer().add("verde");
+                        info.getAnswer().add("green");
                     }
                     else if(game.getNumAnswer().contains(Character.toString(c))){
-                        info.getAnswer().add("amarillo");
+                        info.getAnswer().add("yellow");
                     }
                     else{
-                        info.getAnswer().add("rojo");
+                        info.getAnswer().add("red");
                     }
                 }
             }
             else{
-                pageToReturn = "wordle";
+                pageToReturn = "fin";
                 info.setWordToPlay(wordsPlayed.get(wordsPlayed.size()-1));
             }
             info.setMessage("le quedan "+ (game.getNumTries() - wordsPlayed.size()) + " intentos");
         }
         
         modelAndView.setViewName(pageToReturn);
+        modelAndView.addObject("palabraJugada", jugada);
         modelAndView.addObject("info", info);
+        modelAndView.addObject("game", game);
         return modelAndView;
     }
 }
