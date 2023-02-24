@@ -24,16 +24,16 @@ public class WordleController {
     @Autowired
     Game game;
 
-    @GetMapping("/searchtry")
-    public ModelAndView search(Info info){
-        if(info.getNumJugada()!=0){
-            String jugada = wordsPlayed.get(info.getNumJugada());
+    @PostMapping("/searchTry")
+    public ModelAndView search(Info info, ModelAndView modelAndView){
+        if((info.getNumJugada()-1)>=0){
+            String jugada = wordsPlayed.get(info.getNumJugada()-1);
             info.setMessage(jugada);
         }
         else{
             info.setMessage(wordsPlayed.stream().collect(Collectors.joining(" ")));
         }
-        ModelAndView modelAndView = new ModelAndView("fin");
+        modelAndView.setViewName("fin");
         modelAndView.addObject("info", info);
         modelAndView.addObject("game", game);
         return modelAndView;
@@ -42,6 +42,8 @@ public class WordleController {
     @GetMapping("/")
     public ModelAndView goToIndexPage() {
         ModelAndView modelAndView = new ModelAndView("wordle");
+        int numJugadas = wordsPlayed.isEmpty() ? 0 : wordsPlayed.size();
+        modelAndView.addObject("wordsPlayed", numJugadas);
         modelAndView.addObject("info", info);
         modelAndView.addObject("game", game);
         return modelAndView;
@@ -50,11 +52,13 @@ public class WordleController {
     @PostMapping("/play")
     public ModelAndView play(Info info, ModelAndView modelAndView) {
         String pageToReturn = "wordle";
-        wordsPlayed.add(info.getWordToPlay());
         char[] respuesta = game.getNumAnswer().toCharArray();
         char[] jugada = info.getWordToPlay().toCharArray();
         if(game.getNumAnswer().length() != info.getWordToPlay().length()) {
             info.setErrorMessage("error tamaño jugada");
+            for(int i = 0; i < jugada.length; i++){
+                info.getAnswer().add("white");
+            }
         }
         else{
             if(!game.getNumAnswer().equals(info.getWordToPlay())){
@@ -70,15 +74,26 @@ public class WordleController {
                         info.getAnswer().add("red");
                     }
                 }
+                if(((game.getNumTries() -1) - wordsPlayed.size()) == 0){
+                    info.setMessage("Perdiste, la palabra era: " + game.getNumAnswer());
+                    pageToReturn = "fin";
+                }
+                else if(((game.getNumTries() -1) - wordsPlayed.size()) == 1){
+                    info.setMessage("le queda "+ ((game.getNumTries() -1) - wordsPlayed.size()) + " intento");
+                }
+                else if(((game.getNumTries() -1) - wordsPlayed.size()) > 1){
+                    info.setMessage("le quedan "+ ((game.getNumTries() -1) - wordsPlayed.size()) + " intentos");
+                }
             }
             else{
+                info.setMessage("Ya ganaste.\nDale boludo buscá otro juego");
                 pageToReturn = "fin";
-                info.setWordToPlay(wordsPlayed.get(wordsPlayed.size()-1));
             }
-            info.setMessage("le quedan "+ (game.getNumTries() - wordsPlayed.size()) + " intentos");
+            wordsPlayed.add(info.getWordToPlay());
         }
-        
         modelAndView.setViewName(pageToReturn);
+        int numJugadas = wordsPlayed.isEmpty() ? 0 : wordsPlayed.size();
+        modelAndView.addObject("wordsPlayed", numJugadas);
         modelAndView.addObject("palabraJugada", jugada);
         modelAndView.addObject("info", info);
         modelAndView.addObject("game", game);

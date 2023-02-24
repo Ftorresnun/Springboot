@@ -5,10 +5,15 @@
         <title>Busca tu intento</title>
     </head>
     <body>
-        <h1>Has ganado, busca tu intento</h1>
-        <form:form action="searchTry" method="get" modelAttribute="info">
+        <h1>busca tu intento</h1>
+        <form action="searchTry" method="post" modelAttribute="info">
             <span>Num intento</span>
-            <input path="wordToPlay" type="text" name="wordToPlay"></form>
-        </form:form>
+            <input path="numJugada" type="number" name="numJugada" autofocus>
+            <input type="submit" value="Add"/>
+        </form>
+        <div th:if="${info.numJugada != null}">
+            <span>intento: </span>
+            <span th:text="${info.Message}"></span>
+        </div>
     </body>
 </html>

@@ -6,11 +6,13 @@
     </head>
     <body>
         <h1>wordle</h1>
-        <form action="play" method="post" modelAttribute="info">
-            <span>palabra</span>
-            <input path="wordToPlay" type="text" name="wordToPlay" placeholder="palabra" th:maxlength="${game.getNumAnswer.length}">
-            <input type="submit" value="Add"/>
-        </form>
+        <th:block th:if="${game.getNumTries} > ${wordsPlayed}">
+            <form action="play" method="post" modelAttribute="info">
+                <span>palabra</span>
+                <input path="wordToPlay" type="text" name="wordToPlay" placeholder="palabra" th:maxlength="${game.getNumAnswer.length}" autofocus>
+                <input type="submit" value="Add"/>
+            </form>
+        </th:block>
         <!-- show the word in screen-->
         <div th:if="${info.wordToPlay != null}">
             <span>Palabra jugada: </span>
@@ -26,8 +28,10 @@
         <div th:if="${info.wordToPlay != null}">
             <span>tamaño correcto: </span>
             <span th:text="${info.errorMessage}"></span>
+        </div>
         <div th:if="${info.wordToPlay != null}">
             <span>intentos: </span>
             <span th:text="${info.message}"></span>
+        </div>
     </body>
 </html>
