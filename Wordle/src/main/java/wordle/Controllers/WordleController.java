@@ -41,6 +41,13 @@ public class WordleController {
 
     @GetMapping("/")
     public ModelAndView goToIndexPage() {
+        ModelAndView modelAndView = new ModelAndView("index");
+        info.setTime(60);
+        return modelAndView;
+    }
+
+    @GetMapping("/play")
+    public ModelAndView goToPlayPage() {
         ModelAndView modelAndView = new ModelAndView("wordle");
         int numJugadas = wordsPlayed.isEmpty() ? 0 : wordsPlayed.size();
         modelAndView.addObject("wordsPlayed", numJugadas);
@@ -52,6 +59,67 @@ public class WordleController {
     @PostMapping("/play")
     public ModelAndView play(Info info, ModelAndView modelAndView) {
         String pageToReturn = "wordle";
+        char[] respuesta = game.getNumAnswer().toCharArray();
+        char[] jugada = info.getWordToPlay().toCharArray();
+        if(game.getNumAnswer().length() != info.getWordToPlay().length()) {
+            info.setErrorMessage("error tamaño jugada");
+            for(int i = 0; i < jugada.length; i++){
+                info.getAnswer().add("white");
+            }
+        }
+        else{
+            if(!game.getNumAnswer().equals(info.getWordToPlay())){
+                for(int i = 0; i < jugada.length; i++) {
+                    char c = jugada[i];
+                    if(respuesta[i] == c) {
+                        info.getAnswer().add("green");
+                    }
+                    else if(game.getNumAnswer().contains(Character.toString(c))){
+                        info.getAnswer().add("yellow");
+                    }
+                    else{
+                        info.getAnswer().add("red");
+                    }
+                }
+                if(((game.getNumTries() -1) - wordsPlayed.size()) == 0){
+                    info.setMessage("Perdiste, la palabra era: " + game.getNumAnswer());
+                    pageToReturn = "fin";
+                }
+                else if(((game.getNumTries() -1) - wordsPlayed.size()) == 1){
+                    info.setMessage("le queda "+ ((game.getNumTries() -1) - wordsPlayed.size()) + " intento");
+                }
+                else if(((game.getNumTries() -1) - wordsPlayed.size()) > 1){
+                    info.setMessage("le quedan "+ ((game.getNumTries() -1) - wordsPlayed.size()) + " intentos");
+                }
+            }
+            else{
+                info.setMessage("Ya ganaste.\nDale boludo buscá otro juego");
+                pageToReturn = "fin";
+            }
+            wordsPlayed.add(info.getWordToPlay());
+        }
+        modelAndView.setViewName(pageToReturn);
+        int numJugadas = wordsPlayed.isEmpty() ? 0 : wordsPlayed.size();
+        modelAndView.addObject("wordsPlayed", numJugadas);
+        modelAndView.addObject("palabraJugada", jugada);
+        modelAndView.addObject("info", info);
+        modelAndView.addObject("game", game);
+        return modelAndView;
+    }
+
+    @GetMapping("/playC")
+    public ModelAndView goToPlayCPage() {
+        ModelAndView modelAndView = new ModelAndView("wordleC");
+        int numJugadas = wordsPlayed.isEmpty() ? 0 : wordsPlayed.size();
+        modelAndView.addObject("wordsPlayed", numJugadas);
+        modelAndView.addObject("info", info);
+        modelAndView.addObject("game", game);
+        return modelAndView;
+    }
+    
+    @PostMapping("/playC")
+    public ModelAndView playC(Info info, ModelAndView modelAndView) {
+        String pageToReturn = "wordleC";
         char[] respuesta = game.getNumAnswer().toCharArray();
         char[] jugada = info.getWordToPlay().toCharArray();
         if(game.getNumAnswer().length() != info.getWordToPlay().length()) {

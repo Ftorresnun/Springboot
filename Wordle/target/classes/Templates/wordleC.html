@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="ISO-8859-1">
+        <title>wordle</title>
+        <script>
+            //Contador de 60 segundos
+            var segundos = document.getElementById("time2").innerHTML;
+            function tiempo() {
+                if (segundos > 0) {
+                    segundos--;
+                    document.getElementById("tiempo").innerHTML = segundos;
+                    document.getElementById("time").setAttribute("value", segundos);
+                    setTimeout("tiempo()", 1000);
+                } else {
+                    document.getElementById("tiempo").innerHTML = "0";
+                    document.getElementById("tiempo").style.color = "red";
+                    document.getElementById("tiempo").style.fontWeight = "bold";
+                    document.getElementById("tiempo").style.fontSize = "xx-large";
+                }
+            }
+        </script>
+    </head>
+    <body onload="tiempo()">
+        <h1>wordle</h1>
+        <p id="time2" hidden th:text="${info.time}"></p>
+        <p id="tiempo"></p>
+        <th:block th:if="${game.getNumTries} > ${wordsPlayed}">
+            <form action="playC" method="post" modelAttribute="info">
+                <span>palabra</span>
+                <input path="wordToPlay" type="text" name="wordToPlay" placeholder="palabra" th:maxlength="${game.getNumAnswer.length}" autofocus>
+                <input path="time" id="time" type="hidden" name="time" th:value="${tiempo}">
+                <input type="submit" value="Add"/>
+            </form>
+        </th:block>
+        <!-- show the word in screen-->
+        <div th:if="${info.wordToPlay != null}">
+            <span>Palabra jugada: </span>
+            <table>
+                <tr>
+                    <th:block th:each="i : ${#numbers.sequence(0, palabraJugada.length-1, +1)}">
+                        <td>
+                            <div th:style="'background-color:' + ${info.answer[i]}" th:text="${palabraJugada[i]}"></div>
+                        </td>
+                    </th:block>
+                </tr>
+            </table>
+        <div th:if="${info.wordToPlay != null}">
+            <span>tamaño correcto: </span>
+            <span th:text="${info.errorMessage}"></span>
+        </div>
+        <div th:if="${info.wordToPlay != null}">
+            <span>intentos: </span>
+            <span th:text="${info.message}"></span>
+        </div>
+    </body>
+</html>

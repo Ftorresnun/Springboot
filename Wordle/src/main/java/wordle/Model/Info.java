@@ -16,6 +16,7 @@ public class Info {
     private String wordToPlay;
     int numJugada = 0;
     List<String> answer = new ArrayList<>();
+    int time = 60;
     String errorMessage;
 
     public String getErrorMessage() {
@@ -56,5 +57,13 @@ public class Info {
 
     public void setAnswer(List<String> answer) {
         this.answer = answer;
+    }
+
+    public int getTime() {
+        return this.time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 }
