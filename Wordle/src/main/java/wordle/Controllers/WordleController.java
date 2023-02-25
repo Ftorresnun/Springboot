@@ -93,7 +93,7 @@ public class WordleController {
                 }
             }
             else{
-                info.setMessage("Ya ganaste.\nDale boludo buscá otro juego");
+                info.setMessage("Ya ganaste.");
                 pageToReturn = "fin";
             }
             wordsPlayed.add(info.getWordToPlay());
@@ -154,7 +154,7 @@ public class WordleController {
                 }
             }
             else{
-                info.setMessage("Ya ganaste.\nDale boludo buscá otro juego");
+                info.setMessage("Ya ganaste.");
                 pageToReturn = "fin";
             }
             wordsPlayed.add(info.getWordToPlay());
