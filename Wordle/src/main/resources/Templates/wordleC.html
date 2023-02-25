@@ -5,7 +5,7 @@
         <title>wordle</title>
         <script>
             //Contador de 60 segundos
-            var segundos = document.getElementById("time2").innerHTML;
+            var segundos = 60;
             function tiempo() {
                 if (segundos > 0) {
                     segundos--;
@@ -23,7 +23,6 @@
     </head>
     <body onload="tiempo()">
         <h1>wordle</h1>
-        <p id="time2" hidden th:text="${info.time}"></p>
         <p id="tiempo"></p>
         <th:block th:if="${game.getNumTries} > ${wordsPlayed}">
             <form action="playC" method="post" modelAttribute="info">
